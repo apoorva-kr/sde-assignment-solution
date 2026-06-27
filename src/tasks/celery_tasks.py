@@ -53,16 +53,19 @@ async def _process_llm_analysis(payload: Dict[str, Any]):
         raise Exception("Rate limit exceeded")
 
     ctx = PostCallContext(
+        
         interaction_id=interaction_id,
         session_id=payload["session_id"],
         lead_id=payload["lead_id"],
         campaign_id=payload["campaign_id"],
         customer_id=payload["customer_id"],
-        agent_id=payload["agent_id"],
+        agent_id=payload.get("agent_id", "default-agent-id"), 
+        # agent_id=payload["agent_id"],
         call_sid=payload.get("call_sid", ""),
         transcript_text=payload.get("transcript_text", ""),
         conversation_data=payload.get("conversation_data", {}),
         ended_at=datetime.fromisoformat(payload["ended_at"]),
+        additional_data={}
     )
 
     processor = PostCallProcessor()
