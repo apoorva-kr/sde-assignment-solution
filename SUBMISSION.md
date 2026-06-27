@@ -82,3 +82,17 @@ The endpoint POST /session/{sid}/interaction/{iid}/end now returns a 202 Accepte
 ## 15. What I Would Do With More Time
 1. Implement a real-time dashboard for "Queue Depth" visualization.
 2. Develop a UI for customers to configure their own priority rules.
+
+
+
+
+ 1. Design Decisions
+- **Error Handling:** Implemented explicit `KeyError` checks and retry logic to prevent silent task failures.
+- **Recording Pipeline:** Switched from `asyncio.sleep` to a recursive task pattern to allow for scalable, non-blocking polling.
+
+ 2. Assumptions
+- **API Connectivity:** Assumed 401 Unauthorized errors observed in logs were environment-specific; logic is built to handle authentication dynamically.
+- **Task Durability:** Assumed that using Celery's native retry mechanisms satisfies the "no data loss" constraint.
+
+3. Rate Limit Strategy
+- Implemented a basic retry-backoff in the Celery task to handle LLM 429 responses, ensuring the system recovers gracefully during high load.
